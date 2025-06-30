@@ -30,9 +30,11 @@ realized_rates = paths[:, settlement_index]
 
 # 2. Coût total si tu ne couvres pas (tu payes le taux variable)
 unhedged_cost = calculate_unhedged_cost(realized_rates, notional, delta)
+print(f"Unhedged cost min: {min(unhedged_cost)}, max: {max(unhedged_cost)}, mean: {np.mean(unhedged_cost)}")
 
 # 3. Coût total si tu te couvres avec le FRA (tu payes variable + tu reçois FRA)
 hedged_cost = calculate_total_hedged_cost(realized_rates, fra_rate, notional, delta)
+print(f"Hedged cost min: {min(hedged_cost)}, max: {max(hedged_cost)}, mean: {np.mean(hedged_cost)}")
 
 # 4. Graphe comparatif
 import matplotlib.pyplot as plt
@@ -47,3 +49,4 @@ plt.ylabel('Frequency')
 plt.legend()
 plt.grid(True)
 plt.show()
+print(np.isnan(hedged_cost).sum())
