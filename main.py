@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 paths = simulate_libor_paths(S0=0.03, mu=0.00, sigma=0.01, T=0.5, dt=1/252, n_paths=1000)
 
 # 2. Define FRA parameters
-fra_rate = 0.27  # 3.10%
+fra_rate = 0.027  # 3.10%
 notional = 1_000_000
 delta = 0.25  # 3 months
 
