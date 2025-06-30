@@ -34,3 +34,11 @@ def simulate_fra_pnl(rate_paths, fra_rate, notional=1_000_000, delta=0.25):
     realized_rates = rate_paths[:, settlement_index]
     payoffs = fra_payoff(realized_rates, fra_rate, notional, delta)
     return payoffs
+
+def calculate_unhedged_cost(realized_rates, notional, delta):
+    return realized_rates * notional * delta
+
+def calculate_total_hedged_cost(realized_rates, fra_rate, notional, delta):
+    float_cost = calculate_unhedged_cost(realized_rates, notional, delta)
+    fra_compensation = fra_payoff(realized_rates, fra_rate, notional, delta)
+    return float_cost - fra_compensation
