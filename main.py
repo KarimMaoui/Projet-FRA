@@ -13,13 +13,7 @@ delta = 0.25  # 3 months
 # 3. Calculate FRA hedge P&L across simulated paths
 fra_pnl = simulate_fra_pnl(paths, fra_rate, notional, delta)
 
-# 4. Plot P&L distribution
-plt.hist(fra_pnl, bins=50, color='skyblue', edgecolor='black')
-plt.title('Distribution of FRA Hedge P&L')
-plt.xlabel('P&L (€)')
-plt.ylabel('Frequency')
-plt.grid(True)
-plt.show()
+
 
 from fra_pricing import fra_payoff, calculate_unhedged_cost, calculate_total_hedged_cost
 
@@ -33,16 +27,26 @@ unhedged_cost = calculate_unhedged_cost(realized_rates, notional, delta)
 # 3. Coût total si tu te couvres avec le FRA (tu payes variable + tu reçois FRA)
 hedged_cost = calculate_total_hedged_cost(realized_rates, fra_rate, notional, delta)
 
-# 4. Graphe comparatif
-import matplotlib.pyplot as plt
-plt.figure(figsize=(10,5))
-plt.hist(unhedged_cost, bins=50, alpha=0.6, label='Unhedged cost', color='red')
-plt.hist(hedged_cost, bins=50, alpha=0.6, label='Hedged cost (FRA)', color='green')
-plt.axvline(x=np.mean(unhedged_cost), color='red', linestyle='--')
-plt.axvline(x=np.mean(hedged_cost), color='green', linestyle='--')
-plt.title('Cashflow Exposure: Hedged vs Unhedged (3M Floating Rate Liability)')
-plt.xlabel('€ Cash Outflow')
-plt.ylabel('Frequency')
-plt.legend()
-plt.grid(True)
+fig, axs = plt.subplots(2, 1, figsize=(10,10))
+
+# Graphique 1 : FRA payoff
+axs[0].hist(fra_pnl, bins=50, color='skyblue', edgecolor='black')
+axs[0].set_title('Distribution of FRA Hedge P&L')
+axs[0].set_xlabel('P&L (€)')
+axs[0].set_ylabel('Frequency')
+axs[0].grid(True)
+
+# Graphique 2 : Hedged vs Unhedged
+axs[1].hist(unhedged_cost, bins=50, alpha=0.6, label='Unhedged cost', color='red')
+axs[1].hist(hedged_cost, bins=50, alpha=0.6, label='Hedged cost (FRA)', color='green')
+axs[1].axvline(x=np.mean(unhedged_cost), color='red', linestyle='--')
+axs[1].axvline(x=np.mean(hedged_cost), color='green', linestyle='--')
+axs[1].set_title('Cashflow Exposure: Hedged vs Unhedged (3M Floating Rate Liability)')
+axs[1].set_xlabel('€ Cash Outflow')
+axs[1].set_ylabel('Frequency')
+axs[1].legend()
+axs[1].grid(True)
+
+plt.tight_layout()
 plt.show()
+
