@@ -1,3 +1,4 @@
+import numpy as np
 from rate_simulation import simulate_libor_paths
 from fra_pricing import simulate_fra_pnl
 import matplotlib.pyplot as plt
