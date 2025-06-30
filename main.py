@@ -35,6 +35,8 @@ axs[0].set_title('Distribution of FRA Hedge P&L')
 axs[0].set_xlabel('P&L (€)')
 axs[0].set_ylabel('Frequency')
 axs[0].grid(True)
+axs[0].set_ylim(0, 300)  # Ajuste selon la hauteur que tu veux
+
 
 # Graphique 2 : Hedged vs Unhedged
 axs[1].hist(unhedged_cost, bins=50, alpha=0.6, label='Unhedged cost', color='red')
@@ -49,4 +51,8 @@ axs[1].grid(True)
 
 plt.tight_layout()
 plt.show()
+
+print("Exemple de payoff FRA :", fra_pnl[:5])
+print("Exemple de coût unhedged :", unhedged_cost[:5])
+print("Exemple de coût hedged :", hedged_cost[:5])
 
