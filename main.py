@@ -30,6 +30,12 @@ hedged_cost = calculate_total_hedged_cost(realized_rates, fra_rate, notional, de
 fig, axs = plt.subplots(2, 1, figsize=(10,10))
 
 
+# Graphique 1 : FRA payoff
+axs[0].hist(fra_pnl, bins=50, color='skyblue', edgecolor='black')
+axs[0].set_title('Distribution of FRA Hedge P&L')
+axs[0].set_xlabel('P&L (€)')
+axs[0].set_ylabel('Frequency')
+axs[0].grid(True)
 
 
 # Graphique 2 : Hedged vs Unhedged
