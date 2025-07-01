@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def simulate_libor_paths(S0=0.03, mu=0.00, sigma=0.03, T=1, dt=1/252, n_paths=1000):
+def simulate_libor_paths(S0=0.03, mu=0.00, sigma=0.03, T=1, dt=1/252, n_paths=10000):
     """
     Simulates LIBOR forward paths using a Geometric Brownian Motion (GBM) model.
 
