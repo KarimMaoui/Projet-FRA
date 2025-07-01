@@ -1,6 +1,7 @@
 import numpy as np
 from rate_simulation import simulate_libor_paths
 from fra_pricing import simulate_fra_pnl
+from sensitivity_analysis import run_fra_scenario
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
