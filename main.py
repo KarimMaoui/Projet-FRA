@@ -2,6 +2,8 @@ import numpy as np
 from rate_simulation import simulate_libor_paths
 from fra_pricing import simulate_fra_pnl
 import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
 
 # 1. Simulate interest rate paths
 paths = simulate_libor_paths(S0=0.03, mu=0.00, sigma=0.01, T=0.5, dt=1/252, n_paths=1000)
@@ -52,26 +54,32 @@ plt.show()
 print(np.isnan(hedged_cost).sum())
 
 
-def run_fra_scenario(S0, sigma, T_fra, fra_rate, notional=1_000_000, delta=0.25, n_paths=1000):
-    """
-    Run a FRA hedging scenario and return average and std of P&L.
+# Param grid
+initial_rates = [0.02, 0.025, 0.03, 0.035]
+volatilities = [0.005, 0.01, 0.015, 0.02]
+maturities = [0.08, 0.25, 0.5]  # en années (1M, 3M, 6M)
 
-    Parameters:
-        S0 (float): Initial rate
-        sigma (float): Rate volatility
-        T_fra (float): Time until FRA starts (years)
-        fra_rate (float): Fixed rate in FRA
-        notional, delta: Contract terms
-    """
-    # Simulate paths
-    T_total = T_fra + delta
-    dt = 1/252
-    paths = simulate_libor_paths(S0=S0, sigma=sigma, T=T_total, dt=dt, n_paths=n_paths)
+results = []
 
-    # Settlement index
-    settlement_index = int(T_fra / dt)
-    realized_rates = paths[:, settlement_index]
+for S0 in initial_rates:
+    for sigma in volatilities:
+        for T_fra in maturities:
+            pnl_mean, pnl_std = run_fra_scenario(S0, sigma, T_fra, fra_rate=0.031)
+            results.append({
+                'Initial Rate': S0,
+                'Volatility': sigma,
+                'Maturity': T_fra,
+                'Avg PnL': pnl_mean,
+                'Vol PnL': pnl_std
+            })
 
-    # Payoffs
-    payoffs = simulate_fra_pnl(paths, fra_rate, notional, delta)
-    return np.mean(payoffs), np.std(payoffs)
+df = pd.DataFrame(results)
+pivot = df.pivot_table(index='Initial Rate', columns='Volatility', values='Avg PnL')
+
+# Heatmap
+plt.figure(figsize=(8,6))
+sns.heatmap(pivot, annot=True, fmt=".0f", cmap='coolwarm')
+plt.title('Average FRA P&L (by Rate and Volatility)')
+plt.xlabel('Volatility')
+plt.ylabel('Initial Rate')
+plt.show()
